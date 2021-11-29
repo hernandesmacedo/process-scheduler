@@ -1,0 +1,9 @@
+class PCB:
+    def __init__(self, name, pid, priority, date_time, init_end_address, remaining_time, next):
+        self.name = name
+        self.pid = pid
+        self.priority = priority
+        self.date_time = date_time
+        self.init_end_address = init_end_address
+        self.remaining_time = remaining_time
+        self.next = next
