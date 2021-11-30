@@ -66,12 +66,12 @@ class Scheduler:
 
     def context_switch(self, queue, executing_process, time_unit):
         if executing_process.remaining_time:
-            print("TIME {:02d} | Context Switch".format(time_unit))
+            print("TIME {:03d} | Context Switch".format(time_unit))
             queue.first = queue.first.next
             queue.last = queue.last.next
         else:
             queue.length -= 1
-            print("TIME {:02d} | Endend ".format(time_unit) + str(executing_process))
+            print("TIME {:03d} | Endend ".format(time_unit) + str(executing_process))
             aux = queue.first
             queue.first = queue.first.next
             queue.last.next = queue.first
@@ -87,12 +87,12 @@ class Scheduler:
             executing_process = queue.first
             while executing_process is not None:
                 time_executing = queue.quantum
-                print("TIME {:02d} | Executing ".format(time_unit) + str(executing_process))
+                print("TIME {:03d} | Executing ".format(time_unit) + str(executing_process))
                 while time_executing and executing_process.remaining_time:
                     executing_process.remaining_time -= 1
                     time_executing -= 1
                     time_unit += 1
-                print("TIME {:02d} | Executing ".format(time_unit) + str(executing_process))
+                print("TIME {:03d} | Executing ".format(time_unit) + str(executing_process))
                 
                 executing_process = self.context_switch(queue, executing_process, time_unit) 
                 
