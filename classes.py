@@ -26,12 +26,6 @@ class Queue:
             self.last = process
             self.last.next = self.first
 
-    def end_process(self):
-        aux = self.first
-        self.first = self.first.next
-        self.last.next = self.first
-        del aux
-
     def queue_end(self):
         del self
 
