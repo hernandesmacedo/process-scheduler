@@ -12,16 +12,20 @@ class PCB:
         return self.name + " | pid: " + str(self.pid) + " | priority: " + str(self.priority) + " | date_time: " + str(self.date_time) + " | init_end_address: " + str(self.init_end_address) + " | remaining_time: " + str(self.remaining_time) + "\n"
 
 class Queue:
-    def __init__(self):
+    def __init__(self, quantum):
         self.first = None
+        self.last = None
+        self.quantum = quantum
 
     def context_switch(self, quantum):
         self.first.remaining_time -= quantum
         self.first = self.first.next
+        self.last = self.last.next
 
-    def process_end(self):
+    def end_process(self):
         aux = self.first
         self.first = self.first.next
+        self.last.next = self.first
         del aux
 
     def queue_end(self):
