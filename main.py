@@ -45,3 +45,13 @@ def processes_creator(top_priority_queue, second_priority_queue, third_priority_
         remaining_time = random.randrange(1, 12)
         process = PCB(name, priority, date_time, [init_address, end_address], remaining_time)
         last_priority_queue.new_process(process)
+
+def main():
+    top_priority_queue = Queue(quantum = 4)
+    second_priority_queue = Queue(quantum = 3)
+    third_priority_queue = Queue(quantum = 2)
+    last_priority_queue = Queue(quantum = 2)
+
+    processes_creator(top_priority_queue, second_priority_queue, third_priority_queue, last_priority_queue)
+
+main() 
