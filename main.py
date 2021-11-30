@@ -1,6 +1,6 @@
 import random
 from datetime import datetime, timedelta
-from classes import PCB, Queue, Scheduler
+from classes import PCB, Scheduler
 
 def processes_creator(scheduler):
     
@@ -8,7 +8,7 @@ def processes_creator(scheduler):
     date_time = datetime.now()
     number_of_processes = 0
 
-    while len(scheduler.ordered_queues) != 4 or number_of_processes < 19:
+    while len(scheduler.ordered_queues) != 4 or number_of_processes < 18:
         name = 'Processo ' + str(number_of_processes + 1)
         priority = random.randrange(1, 5)
         date_time += timedelta(minutes=1)
@@ -22,6 +22,10 @@ def processes_creator(scheduler):
 def main():
     scheduler = Scheduler()
     
+    time_unit = 0
+    
     processes_creator(scheduler)
+    
+    scheduler.round_robin(time_unit)
             
 main() 
