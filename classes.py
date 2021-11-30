@@ -15,6 +15,7 @@ class Queue:
     def __init__(self, quantum):
         self.first = None
         self.last = None
+        self.length = 0
         self.quantum = quantum
 
     def new_process(self, process):
@@ -25,6 +26,7 @@ class Queue:
             self.last.next = process
             self.last = process
             self.last.next = self.first
+        self.length += 1
 
     def end_queue(self):
         del self
@@ -68,6 +70,7 @@ class Scheduler:
             queue.first = queue.first.next
             queue.last = queue.last.next
         else:
+            queue.length -= 1
             print("TIME {:02d} | Endend ".format(time_unit) + str(executing_process))
             aux = queue.first
             queue.first = queue.first.next
