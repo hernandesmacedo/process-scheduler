@@ -26,7 +26,7 @@ class Queue:
             self.last = process
             self.last.next = self.first
 
-    def queue_end(self):
+    def end_queue(self):
         del self
 
 class Scheduler:
@@ -85,4 +85,5 @@ class Scheduler:
                 print("TIME {:02d} | Executing ".format(time_unit) + str(executing_process))
                 
                 executing_process = self.context_switch(queue, executing_process, time_unit) 
-
+                
+            queue.end_queue()
