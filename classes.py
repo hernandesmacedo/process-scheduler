@@ -39,3 +39,29 @@ class Queue:
 
     def queue_end(self):
         del self
+
+class Scheduler:
+    def __init__(self):
+        self.ordered_queues = []
+    
+    def queue_exists_in_ordered_queues(self, priority):
+        for queue in self.ordered_queues:
+            if(queue.first.priority == priority):
+                return self.ordered_queues.index(queue)
+        return None
+
+    def new_position_in_ordered_queues(self, priority):
+        for queue in self.ordered_queues:
+            if(queue.first.priority < priority):
+                return self.ordered_queues.index(queue)
+        return len(self.ordered_queues)
+
+    def schedule_process(self, process):
+        queue_position = self.queue_exists_in_ordered_queues(process.priority)
+        if(queue_position is not None):
+            self.ordered_queues[queue_position].new_process(process)
+        else:
+            new_queue = Queue(quantum = process.priority)
+            new_queue.new_process(process)
+            new_position = self.new_position_in_ordered_queues(process.priority)
+            self.ordered_queues.insert(new_position, new_queue) 
