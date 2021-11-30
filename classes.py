@@ -22,6 +22,15 @@ class Queue:
         self.first = self.first.next
         self.last = self.last.next
 
+    def new_process(self, process):
+        if self.first == None:
+            self.first = self.last = process
+            self.first.next = self.last.next = process
+        else:
+            self.last.next = process
+            self.last = process
+            self.last.next = self.first
+
     def end_process(self):
         aux = self.first
         self.first = self.first.next
