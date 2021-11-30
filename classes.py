@@ -76,4 +76,19 @@ class Scheduler:
                 del aux
                 return None
             del aux
-        return queue.first 
+        return queue.first
+
+    def round_robin(self, time_unit):
+        for queue in self.ordered_queues:
+            executing_process = queue.first
+            while executing_process is not None:
+                time_executing = queue.quantum
+                print("TIME {:02d} | Executing ".format(time_unit) + str(executing_process))
+                while time_executing and executing_process.remaining_time:
+                    executing_process.remaining_time -= 1
+                    time_executing -= 1
+                    time_unit += 1
+                print("TIME {:02d} | Executing ".format(time_unit) + str(executing_process))
+                
+                executing_process = self.context_switch(queue, executing_process, time_unit) 
+
