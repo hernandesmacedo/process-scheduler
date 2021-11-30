@@ -32,6 +32,13 @@ class Queue:
 class Scheduler:
     def __init__(self):
         self.ordered_queues = []
+        
+    def __repr__(self):
+        description = ""
+        for queue in self.ordered_queues:
+            priority_queue = queue.first.priority
+            description += "PRIORITY " + str(priority_queue) + " QUEUE | " + str(queue.length) + " processes\n"
+        return description
     
     def queue_exists_in_ordered_queues(self, priority):
         for queue in self.ordered_queues:
