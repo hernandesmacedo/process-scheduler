@@ -17,11 +17,6 @@ class Queue:
         self.last = None
         self.quantum = quantum
 
-    def context_switch(self, quantum):
-        self.first.remaining_time -= quantum
-        self.first = self.first.next
-        self.last = self.last.next
-
     def new_process(self, process):
         if self.first == None:
             self.first = self.last = process
@@ -64,4 +59,21 @@ class Scheduler:
             new_queue = Queue(quantum = process.priority)
             new_queue.new_process(process)
             new_position = self.new_position_in_ordered_queues(process.priority)
-            self.ordered_queues.insert(new_position, new_queue) 
+            self.ordered_queues.insert(new_position, new_queue)
+
+    def context_switch(self, queue, executing_process, time_unit):
+        if executing_process.remaining_time:
+            print("TIME {:02d} | Context Switch".format(time_unit))
+            queue.first = queue.first.next
+            queue.last = queue.last.next
+        else:
+            print("TIME {:02d} | Endend ".format(time_unit) + str(executing_process))
+            aux = queue.first
+            queue.first = queue.first.next
+            queue.last.next = queue.first
+            if queue.first == aux:
+                del queue.first
+                del aux
+                return None
+            del aux
+        return queue.first 
