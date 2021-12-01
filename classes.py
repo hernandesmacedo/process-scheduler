@@ -39,7 +39,13 @@ class Scheduler:
         description = ""
         for queue in self.ordered_queues:
             priority_queue = queue.first.priority
-            description += "PRIORITY " + str(priority_queue) + " QUEUE | " + str(queue.length) + " processes\n"
+            description += "QUEUE PRIORITY " + str(priority_queue) + " | " + str(queue.length) + " processes | quantum " + str(queue.quantum) + "\n"
+            process = queue.first
+            while True:
+                description += str(process) + "\n"
+                process = process.next
+                if process == queue.first:
+                    break
         return description
     
     def queue_exists_in_ordered_queues(self, priority):
