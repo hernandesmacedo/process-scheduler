@@ -78,16 +78,22 @@ class Scheduler:
             queue.first = queue.first.next
             queue.last = queue.last.next
             logging.info("TIME {:03d} | Stopped   ".format(time_unit) + str(running_process))
-            logging.info("TIME {:03d} | CONTEXT SWITCH".format(time_unit))
+            if queue.length > 1:
+                logging.info("TIME {:03d} | QUANTUM ENDED | CONTEXT SWITCH".format(time_unit))
+            else:
+                logging.info("TIME {:03d} | QUANTUM ENDED".format(time_unit))
         else:
-            queue.length -= 1
             logging.info("TIME {:03d} | Endend    ".format(time_unit) + str(running_process))
-            logging.info("TIME {:03d} | CONTEXT SWITCH".format(time_unit))
+            if queue.length > 1:
+                logging.info("TIME {:03d} | QUANTUM ENDED | CONTEXT SWITCH".format(time_unit))
+            else:
+                logging.info("TIME {:03d} | QUANTUM ENDED".format(time_unit))
             aux = queue.first
             queue.first = queue.first.next
             queue.last.next = queue.first
+            queue.length -= 1
             if queue.first == aux:
-                logging.info("TIME {:03d} | QUEUE PRIORITY ".format(time_unit) + str(queue.first.priority) + " ENDED")
+                logging.info("TIME {:03d} | QUEUE PRIORITY ".format(time_unit) + str(queue.first.priority) + " ENDED | CONTEXT SWITCH")
                 del queue.first
                 del aux
                 return None
