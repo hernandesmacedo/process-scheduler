@@ -190,10 +190,11 @@ class Scheduler:
             queue.first = queue.first.next
             queue.last.next = queue.first
             queue.length -= 1
-            if queue.first == aux:
+            if queue.length == 0:
                 logging.info("TIME {:03d} | QUEUE PRIORITY ".format(time_unit) + str(queue.first.priority) + " ENDED | CONTEXT SWITCH\n")
                 del queue.first
                 del aux
+                queue.end_queue()
                 return None
             del aux
         return queue.first
@@ -230,7 +231,4 @@ class Scheduler:
                     running_process.remaining_time -= 1
                     runtime -= 1
                     time_unit += 1
-                
-                running_process = self.context_switch(queue, running_process, time_unit) 
-                
-            queue.end_queue()
+                running_process = self.context_switch(queue, running_process, time_unit)
