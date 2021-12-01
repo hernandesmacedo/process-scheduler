@@ -5,7 +5,7 @@ from classes import PCB, Scheduler
 def processes_creator(scheduler):
     
     end_address = 9999
-    date_time = datetime.now()
+    date_time = datetime.now().replace(microsecond=0)
     number_of_processes = 0
 
     while len(scheduler.ordered_queues) != 4 or number_of_processes < 18:
