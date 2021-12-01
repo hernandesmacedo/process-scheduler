@@ -32,15 +32,15 @@ class Queue:
     Circular queue of processes with same priority.
 
     Creates a processes queue containing:
-        `first`: Current first PCB process in list
-        `last`: Current last PCB process in list (the one right before the first one)
-        `length`: int as quantity of processes currently in list
-        `quantum`: int as the limit time unit for a process in this Queue to use CPU
+        `first`: Current first PCB process in queue
+        `last`: Current last PCB process in queue (the one right before the first one)
+        `length`: int as quantity of processes currently in queue
+        `quantum`: int as the limit time units for a process in this Queue to use CPU
     """
     def __init__(self, quantum):
         """
         Initiate a new empty Queue with quantum value provided from Scheduler based
-        on priority processes to be in this list.
+        on priority of processes that will be in this queue.
         """
         self.first = None
         self.last = None
@@ -51,7 +51,8 @@ class Queue:
         """
         Adds a new PCB process to a Queue.
         If a Queue is empty, it will be the first and last PCB process in it, pointing to itself as next,
-        otherwise it will assume the last position and point to the first PCB process as its next."""
+        otherwise it will assume the last position and point to the first PCB process as its next.
+        """
         if self.first == None:
             self.first = self.last = process
             self.first.next = self.last.next = process
@@ -67,14 +68,14 @@ class Queue:
 
 class Scheduler:
     """
-    Scheduler is responsible to sort all Queues and processes in it.
+    Scheduler is responsible for sorting all Queues and processes in it.
     It uses priority rule to arrange the Queues and then, uses Round Robin to 
     organize how processes will use CPU.
 
     Creates an object containing:
         `sorted_queues`: A list with all Queues with different priorities. This list is sorted by priority,
-        so in first index will be the Queue of processes with highest priority,
-        and in the last index will be the Queue of processes with lowest priority.
+        so in first list index will be the Queue of processes with highest priority,
+        and in the last list index will be the Queue of processes with lowest priority.
     """
     def __init__(self):
         """Initiate a new empty Scheduler with no Queue."""
@@ -122,7 +123,7 @@ class Scheduler:
             `priority`: priority of the new Queue
 
         Returns:
-            The position (index) where the new Queue must be inserted, based in its `priority` value,
+            The position (index) where the new Queue must be inserted based in its `priority` value,
             in order to maintain the priority rule.
         """
         for queue in self.sorted_queues:
@@ -132,10 +133,10 @@ class Scheduler:
 
     def schedule_process(self, process):
         """
-        Receives a new PCB process and verifies if there is a Queue to is priority in Scheduler.
-        If not, creates a new Queue and insert it in Scheduler in a position based in process
+        Receives a new PCB process and verifies if there is a Queue with same priority in Scheduler.
+        If not, creates a new Queue and insert it in a position based in process
         `priority` value, to maintain the priority rule.
-        If already exists a Queue to this process `priority` value in Scheduler, then just add ir to the end of this Queue.
+        If already exists a Queue with same priority in Scheduler, then just adds it to the end of this Queue.
 
         Args:
             `self`: Scheduler
@@ -155,8 +156,8 @@ class Scheduler:
         This method executes the Context Switch.
         If the running process still has remaining time to be finished, then points to the next
         process as the first in Queue, logs a message of Stopped process, Quantum endend and Context Switch event.
-        If the running process does not have remaining time to be finished, this means it already has been finished,
-        then points to the next process as the first in Queue, deletes the process memory space, decreases the
+        If the running process does not have remaining time to be finished, this means it has already been finished,
+        then points to the next process as the first in Queue, deletes the finished process memory space, decreases the
         Queue length by 1, and logs a message of Endend process, Quantum endend and Context Switch event.
 
         Args:
@@ -166,7 +167,7 @@ class Scheduler:
             `time_unit`: the time unit that the context switch has happened.
             
         Returns:
-            If the next process is the same as the current running process, that means it was the last running 
+            If next process is the same as a finished process itself, that means it was the last running 
             process, and the Queue finished all processes, returning None to indicate that there are no more
             processes to be runned in this Queue.
             Otherwise, returns the updated first process in `queue`, because Round Robin works in a circular Queue.
@@ -203,15 +204,16 @@ class Scheduler:
         Because the processes Queue are executed respecting their priority values,
         a for loop is performed to iterate over the Queues in this `scheduler` list of Queues,
         that was sorted by priority values, so the Queue with highest priority will be executed first.
-        For each Queue, the process to be executed will be the first in the Queue, it only can use CPU
-        during the `time_executing` value that is a copy from queue's `quantum` value.
-        For each time unit, the `time_executing` for the process to use CPU decreases one unit, its `remaining_time`
-        also decreases one unit and the `time_unit` of processing increases one unit to simulate the real life time.
-        When the `time_executing` is 0, that means the quantum of time for that process is finished, and a context switch
+        For each Queue, the process to be executed will be the first in the Queue, and it can only use CPU
+        during the `runtime` value that is a copy from queue's `quantum` value.
+        For each time unit, the `runtime` for the process to use CPU decreases 1 unit, its `remaining_time`
+        also decreases 1 unit and the `time_unit` of processing increases 1 unit to simulate the real life time.
+        When the `runtime` is 0, that means the quantum of time for that process is finished, and a context switch
         must happen in diffent ways:
         - Gives the CPU to the next process in the same Queue, if there is another process;
         - The same process continues in CPU, if it is the last process in this Queue and still has remaining time;
-        - Gives the CPU to the next highest priority Queue, if this process was the last process in this Queue and it has no remaining time (has finished);
+        - Gives the CPU to the next highest priority Queue, if this process was the last process
+        in this Queue and it has no remaining time (has finished);
         - Ends Round Robin scheduling, if this process has no remaning time and it is already in the lowest priority Queue (the last one).
         
         Args:
@@ -222,11 +224,11 @@ class Scheduler:
         for queue in self.sorted_queues:
             running_process = queue.first
             while running_process is not None:
-                time_executing = queue.quantum
+                runtime = queue.quantum
                 logging.info("TIME {:03d} | Executing ".format(time_unit) + str(running_process))
-                while time_executing and running_process.remaining_time:
+                while runtime and running_process.remaining_time:
                     running_process.remaining_time -= 1
-                    time_executing -= 1
+                    runtime -= 1
                     time_unit += 1
                 
                 running_process = self.context_switch(queue, running_process, time_unit) 
