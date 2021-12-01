@@ -1,15 +1,15 @@
 class PCB:
-    def __init__(self, name, priority, date_time, init_end_address, remaining_time):
+    def __init__(self, name, priority, date_time, memory_address, remaining_time):
         self.name = name.upper()
         self.pid = id(self)
         self.priority = priority
         self.date_time = date_time
-        self.init_end_address = init_end_address
+        self.memory_address = memory_address
         self.remaining_time = remaining_time
         self.next = None
         
     def __repr__(self):
-        return self.name + " | pid: " + str(self.pid) + " | priority: " + str(self.priority) + " | date_time: " + str(self.date_time) + " | init_end_address: " + str(self.init_end_address) + " | remaining_time: " + str(self.remaining_time) + "\n"
+        return self.name + " | pid: " + str(self.pid) + " | priority: " + str(self.priority) + " | date_time: " + str(self.date_time) + " | memory_address: " + str(self.memory_address) + " | remaining_time: {:02d}".format(self.remaining_time)
 
 class Queue:
     def __init__(self, quantum):
