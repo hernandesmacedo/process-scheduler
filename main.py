@@ -19,7 +19,7 @@ def processes_creator(scheduler):
         priority = random.randint(1, 4)
         date_time += timedelta(minutes=1)
         init_address = end_address + 1
-        end_address = init_address + random.randint(0, 20)
+        end_address = init_address + random.randint(1, 20)
         remaining_time = random.randint(2, 18)
         process = PCB(name, priority, date_time, init_address, end_address, remaining_time)
         scheduler.schedule_process(process)
