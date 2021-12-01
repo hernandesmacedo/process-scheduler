@@ -1,3 +1,6 @@
+import logging
+logging.basicConfig(filename = 'output.log', level=logging.DEBUG, format='%(message)s')
+
 class PCB:
     def __init__(self, name, priority, date_time, memory_address, remaining_time):
         self.name = name.upper()
@@ -72,16 +75,19 @@ class Scheduler:
 
     def context_switch(self, queue, executing_process, time_unit):
         if executing_process.remaining_time:
-            print("TIME {:03d} | Context Switch".format(time_unit))
             queue.first = queue.first.next
             queue.last = queue.last.next
+            logging.info("TIME {:03d} | Stopped   ".format(time_unit) + str(executing_process))
+            logging.info("TIME {:03d} | CONTEXT SWITCH".format(time_unit))
         else:
             queue.length -= 1
-            print("TIME {:03d} | Endend ".format(time_unit) + str(executing_process))
+            logging.info("TIME {:03d} | Endend    ".format(time_unit) + str(executing_process))
+            logging.info("TIME {:03d} | CONTEXT SWITCH".format(time_unit))
             aux = queue.first
             queue.first = queue.first.next
             queue.last.next = queue.first
             if queue.first == aux:
+                logging.info("TIME {:03d} | QUEUE PRIORITY ".format(time_unit) + str(queue.first.priority) + " ENDED")
                 del queue.first
                 del aux
                 return None
@@ -89,16 +95,16 @@ class Scheduler:
         return queue.first
 
     def round_robin(self, time_unit):
+        logging.info("ROUND ROBIN EXECUTION:")
         for queue in self.ordered_queues:
             executing_process = queue.first
             while executing_process is not None:
                 time_executing = queue.quantum
-                print("TIME {:03d} | Executing ".format(time_unit) + str(executing_process))
+                logging.info("TIME {:03d} | Executing ".format(time_unit) + str(executing_process))
                 while time_executing and executing_process.remaining_time:
                     executing_process.remaining_time -= 1
                     time_executing -= 1
                     time_unit += 1
-                print("TIME {:03d} | Executing ".format(time_unit) + str(executing_process))
                 
                 executing_process = self.context_switch(queue, executing_process, time_unit) 
                 

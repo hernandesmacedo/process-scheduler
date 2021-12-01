@@ -1,6 +1,8 @@
 import random
 from datetime import datetime, timedelta
 from classes import PCB, Scheduler
+import logging
+logging.basicConfig(filename = 'output.log', level=logging.DEBUG, format='%(message)s')
 
 def processes_creator(scheduler):
     
@@ -25,6 +27,9 @@ def main():
     time_unit = 0
     
     processes_creator(scheduler)
+    
+    logging.info("SCHEDULER:")
+    logging.info(scheduler)
     
     scheduler.round_robin(time_unit)
             
