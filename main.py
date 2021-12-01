@@ -5,7 +5,11 @@ import logging
 logging.basicConfig(filename = 'output.log', level=logging.DEBUG, format='%(message)s')
 
 def processes_creator(scheduler):
-    
+    """Generates random processes until there are 4 different priorities and at least 18 different processes created.
+
+    Args:
+        `scheduler`: Scheduler receiving and organizing order processes according to their priority and creation time.
+    """
     end_address = 9999
     date_time = datetime.now().replace(microsecond=0)
     number_of_processes = 0
