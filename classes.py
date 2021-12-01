@@ -73,15 +73,15 @@ class Scheduler:
             new_position = self.new_position_in_ordered_queues(process.priority)
             self.ordered_queues.insert(new_position, new_queue)
 
-    def context_switch(self, queue, executing_process, time_unit):
-        if executing_process.remaining_time:
+    def context_switch(self, queue, running_process, time_unit):
+        if running_process.remaining_time:
             queue.first = queue.first.next
             queue.last = queue.last.next
-            logging.info("TIME {:03d} | Stopped   ".format(time_unit) + str(executing_process))
+            logging.info("TIME {:03d} | Stopped   ".format(time_unit) + str(running_process))
             logging.info("TIME {:03d} | CONTEXT SWITCH".format(time_unit))
         else:
             queue.length -= 1
-            logging.info("TIME {:03d} | Endend    ".format(time_unit) + str(executing_process))
+            logging.info("TIME {:03d} | Endend    ".format(time_unit) + str(running_process))
             logging.info("TIME {:03d} | CONTEXT SWITCH".format(time_unit))
             aux = queue.first
             queue.first = queue.first.next
@@ -97,15 +97,15 @@ class Scheduler:
     def round_robin(self, time_unit):
         logging.info("ROUND ROBIN EXECUTION:")
         for queue in self.ordered_queues:
-            executing_process = queue.first
-            while executing_process is not None:
+            running_process = queue.first
+            while running_process is not None:
                 time_executing = queue.quantum
-                logging.info("TIME {:03d} | Executing ".format(time_unit) + str(executing_process))
-                while time_executing and executing_process.remaining_time:
-                    executing_process.remaining_time -= 1
+                logging.info("TIME {:03d} | Executing ".format(time_unit) + str(running_process))
+                while time_executing and running_process.remaining_time:
+                    running_process.remaining_time -= 1
                     time_executing -= 1
                     time_unit += 1
                 
-                executing_process = self.context_switch(queue, executing_process, time_unit) 
+                running_process = self.context_switch(queue, running_process, time_unit) 
                 
             queue.end_queue()
