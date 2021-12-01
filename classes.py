@@ -8,10 +8,10 @@ class PCB:
     Defines a process containing:
         `name`: String as process name
         `pid`: Unique int as process ID
-        `priority`: int as process priority order
+        `priority`: int as process priority
         `date_time`: datetime as process creation date and time
-        `remaining_time`: int representing the time unit for the process to be finished
-        `next`: PCB that comes after current PCB in a list
+        `remaining_time`: int representing the time units for the process to be finished
+        `next`: PCB process that comes after current PCB process in a queue
     """
     def __init__(self, name, priority, date_time, init_address, end_address, remaining_time):
         """Initiate a new PCB process with values provided from processes_creator function."""
@@ -72,18 +72,18 @@ class Scheduler:
     organize how processes will use CPU.
 
     Creates an object containing:
-        `ordered_queues`: A list with all Queues with different priorities. This list is sorted by priority,
+        `sorted_queues`: A list with all Queues with different priorities. This list is sorted by priority,
         so in first index will be the Queue of processes with highest priority,
         and in the last index will be the Queue of processes with lowest priority.
     """
     def __init__(self):
         """Initiate a new empty Scheduler with no Queue."""
-        self.ordered_queues = []
+        self.sorted_queues = []
         
     def __repr__(self):
         """Formats the way we want to see a Scheduler and its Queues."""
         description = ""
-        for queue in self.ordered_queues:
+        for queue in self.sorted_queues:
             priority_queue = queue.first.priority
             description += "QUEUE PRIORITY " + str(priority_queue) + " | " + str(queue.length) + " processes | quantum " + str(queue.quantum) + "\n"
             process = queue.first
@@ -94,7 +94,7 @@ class Scheduler:
                     break
         return description
     
-    def queue_exists_in_ordered_queues(self, priority):
+    def queue_exists_in_sorted_queues(self, priority):
         """
         Verifies if a Queue already exists in Scheduler by comparing priority value.
 
@@ -106,12 +106,12 @@ class Scheduler:
             None if there is not a Queue of processes with this `priority` value in `Scheduler`,
             or returns the position of this Queue in the `Scheduler` sorted list of Queues.
         """
-        for queue in self.ordered_queues:
+        for queue in self.sorted_queues:
             if(queue.first.priority == priority):
-                return self.ordered_queues.index(queue)
+                return self.sorted_queues.index(queue)
         return None
 
-    def new_position_in_ordered_queues(self, priority):
+    def new_position_in_sorted_queues(self, priority):
         """
         If there is not a Queue of processes with a `priority` value in `Scheduler`,
         this method verifies where a new processes Queue must be inserted in order to
@@ -125,10 +125,10 @@ class Scheduler:
             The position (index) where the new Queue must be inserted, based in its `priority` value,
             in order to maintain the priority rule.
         """
-        for queue in self.ordered_queues:
+        for queue in self.sorted_queues:
             if(queue.first.priority < priority):
-                return self.ordered_queues.index(queue)
-        return len(self.ordered_queues)
+                return self.sorted_queues.index(queue)
+        return len(self.sorted_queues)
 
     def schedule_process(self, process):
         """
@@ -141,14 +141,14 @@ class Scheduler:
             `self`: Scheduler
             `process`: PCB process object.
         """
-        queue_position = self.queue_exists_in_ordered_queues(process.priority)
+        queue_position = self.queue_exists_in_sorted_queues(process.priority)
         if(queue_position is not None):
-            self.ordered_queues[queue_position].new_process(process)
+            self.sorted_queues[queue_position].new_process(process)
         else:
             new_queue = Queue(quantum = process.priority)
             new_queue.new_process(process)
-            new_position = self.new_position_in_ordered_queues(process.priority)
-            self.ordered_queues.insert(new_position, new_queue)
+            new_position = self.new_position_in_sorted_queues(process.priority)
+            self.sorted_queues.insert(new_position, new_queue)
 
     def context_switch(self, queue, running_process, time_unit):
         """
@@ -219,7 +219,7 @@ class Scheduler:
             `time_unit`: the time unit that the Round Robin is happening.
         """
         logging.info("ROUND ROBIN EXECUTION:")
-        for queue in self.ordered_queues:
+        for queue in self.sorted_queues:
             running_process = queue.first
             while running_process is not None:
                 time_executing = queue.quantum

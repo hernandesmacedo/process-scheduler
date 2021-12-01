@@ -14,7 +14,7 @@ def processes_creator(scheduler):
     date_time = datetime.now().replace(microsecond=0)
     number_of_processes = 0
 
-    while len(scheduler.ordered_queues) != 4 or number_of_processes < 18:
+    while len(scheduler.sorted_queues) != 4 or number_of_processes < 18:
         name = 'PROCESS {:02d}'.format(number_of_processes + 1)
         priority = random.randint(1, 4)
         date_time += timedelta(minutes=1)
