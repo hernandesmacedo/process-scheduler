@@ -13,13 +13,13 @@ class PCB:
         `remaining_time`: int representing the time unit for the process to be finished
         `next`: PCB that comes after current PCB in a list
     """
-    def __init__(self, name, priority, date_time, memory_address, remaining_time):
+    def __init__(self, name, priority, date_time, init_address, end_address, remaining_time):
         """Initiate a new PCB process with values provided from processes_creator function."""
-        self.name = name.upper()
+        self.name = name
         self.pid = id(self)
         self.priority = priority
         self.date_time = date_time
-        self.memory_address = memory_address
+        self.memory_address = [init_address, end_address]
         self.remaining_time = remaining_time
         self.next = None
         
