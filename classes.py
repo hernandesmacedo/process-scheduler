@@ -156,6 +156,7 @@ class Scheduler:
         This method executes the Context Switch.
         If the running process still has remaining time to be finished, then points to the next
         process as the first in Queue, logs a message of Stopped process, Quantum endend and Context Switch event.
+        
         If the running process does not have remaining time to be finished, this means it has already been finished,
         then points to the next process as the first in Queue, deletes the finished process memory space, decreases the
         Queue length by 1, and logs a message of Endend process, Quantum endend and Context Switch event.
@@ -168,7 +169,7 @@ class Scheduler:
             
         Returns:
             If next process is the same as a finished process itself, that means it was the last running 
-            process, and the Queue finished all processes, returning None to indicate that there are no more
+            process, and the Queue finished all processes, returning `None` to indicate that there are no more
             processes to be runned in this Queue.
             Otherwise, returns the updated first process in `queue`, because Round Robin works in a circular Queue.
         """
@@ -205,8 +206,12 @@ class Scheduler:
         Because the processes Queue are executed respecting their priority values,
         a for loop is performed to iterate over the Queues in this `scheduler` list of Queues,
         that was sorted by priority values, so the Queue with highest priority will be executed first.
+        
         For each Queue, the process to be executed will be the first in the Queue, and it can only use CPU
         during the `runtime` value that is a copy from queue's `quantum` value.
+        
+        The process currently using the CPU is the `running_process`.
+        
         For each time unit, the `runtime` for the process to use CPU decreases 1 unit, its `remaining_time`
         also decreases 1 unit and the `time_unit` of processing increases 1 unit to simulate the real life time.
         When the `runtime` is 0, that means the quantum of time for that process is finished, and a context switch
