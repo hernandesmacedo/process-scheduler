@@ -39,7 +39,7 @@ class Queue:
     """
     def __init__(self, quantum):
         """
-        Initiate a new empty Queue with quantum value provided from Scheduler based
+        Initiate a new empty Queue with quantum value based
         on priority of processes that will be in this queue.
         """
         self.first = None
@@ -66,23 +66,21 @@ class Queue:
         """Frees Queue memory space when all PCB processes in it have been finished."""
         del self
 
-class Scheduler:
+class OS:
     """
-    Scheduler is responsible for sorting all Queues and processes in it.
-    It uses priority rule to arrange the Queues and then, uses Round Robin to 
-    organize how processes will use CPU.
+    Operating system that manages processes Queues.
 
-    Creates an object containing:
+    Creates an Operating system object containing:
         `sorted_queues`: A list with all Queues with different priorities. This list is sorted by priority,
         so in first list index will be the Queue of processes with highest priority,
         and in the last list index will be the Queue of processes with lowest priority.
     """
     def __init__(self):
-        """Initiate a new empty Scheduler with no Queue."""
+        """Initiate a new OS with no processes Queue."""
         self.sorted_queues = []
         
     def __repr__(self):
-        """Formats the way we want to see a Scheduler and its Queues."""
+        """Formats the way we want to see a OS and its Queues."""
         description = ""
         for queue in self.sorted_queues:
             priority_queue = queue.first.priority
@@ -97,15 +95,15 @@ class Scheduler:
     
     def queue_exists_in_sorted_queues(self, priority):
         """
-        Verifies if a Queue already exists in Scheduler by comparing priority value.
+        Verifies if a Queue already exists in OS by comparing priority value.
 
         Args:
-            `self`: Scheduler
-            `priority`: priority to be searched in the Scheduler Queues
+            `self`: OS
+            `priority`: priority to be searched in the OS Queues
 
         Returns:
-            None if there is not a Queue of processes with this `priority` value in `Scheduler`,
-            or returns the position of this Queue in the `Scheduler` sorted list of Queues.
+            None if there is not a Queue of processes with this `priority` value in `OS`,
+            or returns the position of this Queue in the `OS` sorted list of Queues.
         """
         for queue in self.sorted_queues:
             if(queue.first.priority == priority):
@@ -114,12 +112,12 @@ class Scheduler:
 
     def new_position_in_sorted_queues(self, priority):
         """
-        If there is not a Queue of processes with a `priority` value in `Scheduler`,
+        If there is not a Queue of processes with a `priority` value in `OS`,
         this method verifies where a new processes Queue must be inserted in order to
         maintain the priority rule.
 
         Args:
-            `self`: Scheduler
+            `self`: OS
             `priority`: priority of the new Queue
 
         Returns:
@@ -131,15 +129,15 @@ class Scheduler:
                 return self.sorted_queues.index(queue)
         return len(self.sorted_queues)
 
-    def schedule_process(self, process):
+    def add_process(self, process):
         """
-        Receives a new PCB process and verifies if there is a Queue with same priority in Scheduler.
+        Receives a new PCB process and verifies if there is a Queue with same priority in OS.
         If not, creates a new Queue and insert it in a position based in process
         `priority` value, to maintain the priority rule.
-        If already exists a Queue with same priority in Scheduler, then just adds it to the end of this Queue.
+        If already exists a Queue with same priority in OS, then just adds it to the end of this Queue.
 
         Args:
-            `self`: Scheduler
+            `self`: OS
             `process`: PCB process object.
         """
         queue_position = self.queue_exists_in_sorted_queues(process.priority)
@@ -150,6 +148,12 @@ class Scheduler:
             new_queue.new_process(process)
             new_position = self.new_position_in_sorted_queues(process.priority)
             self.sorted_queues.insert(new_position, new_queue)
+
+class Scheduler:
+    """
+    Scheduler is responsible for managing which process will use CPU.
+    For it, Scheduler uses priority order and Round Robin rules.
+    """
 
     def context_switch(self, queue, running_process, time_unit):
         """
@@ -200,7 +204,7 @@ class Scheduler:
             del aux
         return queue.first
 
-    def round_robin(self, time_unit):
+    def round_robin(self, time_unit, operating_system):
         """
         This method simulates the Round Robin execution of processes.
         Because the processes Queue are executed respecting their priority values,
@@ -225,9 +229,10 @@ class Scheduler:
         Args:
             `self`: Scheduler
             `time_unit`: the time unit that the Round Robin is happening.
+            `operating_system`: OS with processes Queues.
         """
-        logging.info("ROUND ROBIN EXECUTION:")
-        for queue in self.sorted_queues:
+        logging.info("ROUND ROBIN SCHEDULER EXECUTION:")
+        for queue in operating_system.sorted_queues:
             running_process = queue.first
             while running_process is not None:
                 runtime = queue.quantum
