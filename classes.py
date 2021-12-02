@@ -76,7 +76,7 @@ class OS:
         and in the last list index will be the Queue of processes with lowest priority.
     """
     def __init__(self):
-        """Initiate a new OS with no processes Queue."""
+        """Initiate a new Operating system with no processes Queue."""
         self.sorted_queues = []
         
     def __repr__(self):
@@ -121,7 +121,7 @@ class OS:
             `priority`: priority of the new Queue
 
         Returns:
-            The position (index) where the new Queue must be inserted based in its `priority` value,
+            The position (index) where the new Queue must be inserted based on its `priority` value,
             in order to maintain the priority rule.
         """
         for queue in self.sorted_queues:
@@ -132,7 +132,7 @@ class OS:
     def add_process(self, process):
         """
         Receives a new PCB process and verifies if there is a Queue with same priority in OS.
-        If not, creates a new Queue and insert it in a position based in process
+        If not, creates a new Queue and insert it in a position based on process
         `priority` value, to maintain the priority rule.
         If already exists a Queue with same priority in OS, then just adds it to the end of this Queue.
 
@@ -159,11 +159,11 @@ class Scheduler:
         """
         This method executes the Context Switch.
         If the running process still has remaining time to be finished, then points to the next
-        process as the first in Queue, logs a message of Stopped process, Quantum endend and Context Switch event.
+        process as the first in Queue, logs a message of Stopped process, Quantum ended and Context Switch event.
         
         If the running process does not have remaining time to be finished, this means it has already been finished,
         then points to the next process as the first in Queue, deletes the finished process memory space, decreases the
-        Queue length by 1, and logs a message of Endend process, Quantum endend and Context Switch event.
+        Queue length by 1, and logs a message of Ended process, Quantum ended and Context Switch event.
 
         Args:
             `self`: Scheduler
@@ -186,7 +186,7 @@ class Scheduler:
             else:
                 logging.info("TIME {:03d} | QUANTUM ENDED".format(time_unit))
         else:
-            logging.info("TIME {:03d} | Endend    ".format(time_unit) + str(running_process))
+            logging.info("TIME {:03d} | Ended    ".format(time_unit) + str(running_process))
             if queue.length > 1:
                 logging.info("TIME {:03d} | QUANTUM ENDED | CONTEXT SWITCH".format(time_unit))
             else:
