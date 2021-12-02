@@ -186,7 +186,7 @@ class Scheduler:
             else:
                 logging.info("TIME {:03d} | QUANTUM ENDED".format(time_unit))
         else:
-            logging.info("TIME {:03d} | Ended    ".format(time_unit) + str(running_process))
+            logging.info("TIME {:03d} | Ended     ".format(time_unit) + str(running_process))
             if queue.length > 1:
                 logging.info("TIME {:03d} | QUANTUM ENDED | CONTEXT SWITCH".format(time_unit))
             else:
